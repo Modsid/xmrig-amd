@@ -1,50 +1,38 @@
-# XMRig AMD
+# HYCminer AMD
 
-:warning: **You must update miners to version 2.5 before April 6 due [Monero PoW change](https://getmonero.org/2018/02/11/PoW-change-and-key-reuse.html).**
+HYCminer is a high performance Hycon (HYC) OpenCL miner, forked from [XMRig](https://github.com/xmrig/xmrig) release v2.6.1.
 
-[![Github All Releases](https://img.shields.io/github/downloads/xmrig/xmrig-amd/total.svg)](https://github.com/xmrig/xmrig-amd/releases)
-[![GitHub release](https://img.shields.io/github/release/xmrig/xmrig-amd/all.svg)](https://github.com/xmrig/xmrig-amd/releases)
-[![GitHub Release Date](https://img.shields.io/github/release-date-pre/xmrig/xmrig-amd.svg)](https://github.com/xmrig/xmrig-amd/releases)
-[![GitHub license](https://img.shields.io/github/license/xmrig/xmrig-amd.svg)](https://github.com/xmrig/xmrig-amd/blob/master/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/xmrig/xmrig-amd.svg)](https://github.com/xmrig/xmrig-amd/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/xmrig/xmrig-amd.svg)](https://github.com/xmrig/xmrig-amd/network)
-
-XMRig is high performance Monero (XMR) OpenCL miner, with the official full Windows support.
-
-GPU mining part based on [Wolf9466](https://github.com/OhGodAPet) and [psychocrypt](https://github.com/psychocrypt) code.
-
-* This is the AMD (OpenCL) GPU mining version, there is also a [CPU version](https://github.com/xmrig/xmrig) and [NVIDIA GPU version](https://github.com/xmrig/xmrig-nvidia).
-* [Roadmap](https://github.com/xmrig/xmrig/issues/106) for next releases.
-
-:warning: Suggested values for GPU auto configuration can be not optimal or not working, you may need tweak your threads options. Please fell free open an [issue](https://github.com/xmrig/xmrig-amd/issues) if auto configuration suggest wrong values.
-
-<img src="https://i.imgur.com/TFncsi7.png" width="696" >
+* This is the **AMD GPU** mining version, there is also a [CPU version](https://github.com/team-hycon/xmrig) and [NVIDIA GPU version](https://github.com/team-hycon/xmrig-nvidia).
+* We plan on releasing our roadmap for next releases soon.
 
 #### Table of contents
 * [Features](#features)
 * [Download](#download)
 * [Usage](#usage)
-* [Build](https://github.com/xmrig/xmrig-amd/wiki/Build)
-* [Donations](#donations)
-* [Release checksums](#release-checksums)
+* [Algorithm variations](#algorithm-variations)
+* [Build](https://github.com/team-hycon/xmrig-amd/wiki/Build)
+* [Common Issues](#common-issues)
+* [Other information](#other-information)
 * [Contacts](#contacts)
 
 ## Features
+* Currently running Cryptonight v7
 * High performance.
 * Official Windows support.
 * Support for backup (failover) mining server.
 * CryptoNight-Lite support for AEON.
 * Automatic GPU configuration.
+* GPU health monitoring (clocks, power, temperature, fan speed) 
 * Nicehash support.
 * It's open source software.
 
 ## Download
-* Binary releases: https://github.com/xmrig/xmrig-amd/releases
-* Git tree: https://github.com/xmrig/xmrig-amd.git
-  * Clone with `git clone https://github.com/xmrig/xmrig-amd.git`  :hammer: [Build instructions](https://github.com/xmrig/xmrig-amd/wiki/Build).
+* Binary releases: TBA
+* Git tree: https://github.com/team-hycon/xmrig-amd.git
+    * Clone with `git clone https://github.com/team-hycon/xmrig-amd.git` :hammer: [Build instructions](https://github.com/team-hycon/xmrig-amd/wiki/Build).
 
 ## Usage
-Use [config.xmrig.com](https://config.xmrig.com/amd) to generate, edit or share configurations.
+See the example `config.json` to configure the miner.
 
 ### Command line options
 ```
@@ -75,19 +63,22 @@ Use [config.xmrig.com](https://config.xmrig.com/amd) to generate, edit or share 
   -V, --version             output version information and exit
 ```
 
-## Donations
-Default donation 5% (5 minutes in 100 minutes) can be reduced to 1% via command line option `--donate-level`.
+Also you can use configuration via config file, default **config.json**. You can load multiple config files and combine it with command line options.
 
-* XMR: `48edfHu7V9Z84YzzMa6fUueoELZ9ZRXq9VetWzYGzKt52XU5xvqgzYnDK9URnRoJMk1j8nLwEVsaSWJ4fhdUyZijBGUicoD`
-* BTC: `1P7ujsXeX7GxQwHNnJsRMgAdNkFZmNVqJT`
+## Other information
+* No HTTP support, only stratum protocol support.
+* No TLS support.
+* Default donation 5% (5 minutes in 100 minutes) can be reduced to 1% via command line option `--donate-level`.
 
-## Release checksums
-### SHA-256
-```
-3a18f683a166ed36c967f6c4a1a9270de02e30be1b040b4145a4d18712c8babe xmrig-amd-2.7.1-beta-win32.zip/xmrig-amd.exe
-116ee8beec719f3ff0d7651edc62759cee86bf566f05a3dd2eebaba7273a262c xmrig-amd-2.7.1-beta-win64.zip/xmrig-amd.exe
-```
+## SHA256 for Windows Binary files
+    ad7871564a0417d8b0d608bc34e61d7ab71dffcb61fabff1d3efb79173223826: certUtil -hashfile hycon-amd-win-0.0.1-without-mhttpd/xmrig-amd.exe sha256
+    0dd192e71b6df71a912ab3d614b19de240ebfc7be2c03963d4b268e5599154f3: certUtil -hashfile hycon-amd-win-0.0.1/xmrig-amd.exe sha256
 
 ## Contacts
-* support@xmrig.com
-* [reddit](https://www.reddit.com/user/XMRig/)
+* hycon@glosfer.com
+* [site](https://www.hycon.io)
+* [reddit](https://www.reddit.com/r/HYCON)
+* [facebook](https://www.facebook.com/teamHycon)
+* [instagram](https://www.instagram.com/teamhycon)
+* [medium](https://www.medium.com/@teamhycon)
+* [twitter](https://www.twitter.com/teamhycon)

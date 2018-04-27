@@ -6,6 +6,7 @@
  * Copyright 2016      Jay D Dee   <jayddee246@gmail.com>
  * Copyright 2017-2018 XMR-Stak    <https://github.com/fireice-uk>, <https://github.com/psychocrypt>
  * Copyright 2016-2018 XMRig       <https://github.com/xmrig>, <support@xmrig.com>
+ * Copyright 2018      Team-Hycon  <https://github.com/Team-Hycon>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -34,6 +35,7 @@
 #include "common/net/Id.h"
 #include "common/net/Job.h"
 #include "common/net/Pool.h"
+#include "common/net/Protocol.h"
 #include "common/net/Storage.h"
 #include "common/net/SubmitResult.h"
 #include "rapidjson/fwd.h"
@@ -105,6 +107,8 @@ private:
     void reconnect();
     void setState(SocketState state);
     void startTimeout();
+    void sendSubscribe();
+    void sendAuthorize();
 
     inline bool isQuiet() const { return m_quiet || m_failures >= m_retries; }
 
@@ -123,7 +127,6 @@ private:
     char m_buf[2048];
     char m_ip[46];
     char m_sendBuf[768];
-    const char *m_agent;
     IClientListener *m_listener;
     int m_extensions;
     int m_id;

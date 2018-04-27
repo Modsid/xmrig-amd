@@ -7,6 +7,7 @@
  * Copyright 2017-2018 XMR-Stak    <https://github.com/fireice-uk>, <https://github.com/psychocrypt>
  * Copyright 2018      Lee Clagett <https://github.com/vtnerd>
  * Copyright 2016-2018 XMRig       <https://github.com/xmrig>, <support@xmrig.com>
+ * Copyright 2018      Team-Hycon  <https://github.com/Team-Hycon>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -33,6 +34,7 @@
 #include "crypto/CryptoNight_test.h"
 #include "crypto/CryptoNight_x86.h"
 #include "net/JobResult.h"
+#include "common/net/Protocol.h"
 
 
 alignas(16) cryptonight_ctx *CryptoNight::m_ctx = nullptr;
@@ -43,8 +45,9 @@ xmrig::AlgoVerify CryptoNight::m_av  = xmrig::VERIFY_HW_AES;
 bool CryptoNight::hash(const Job &job, JobResult &result, cryptonight_ctx *ctx)
 {
     fn(job.variant())(job.blob(), job.size(), result.result, &ctx);
+    uint64_t* hash = reinterpret_cast<uint64_t*>(&result.result);
 
-    return *reinterpret_cast<uint64_t*>(result.result + 24) < job.target();
+    return hash[3] < job.target();
 }
 
 

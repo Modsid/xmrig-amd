@@ -1,5 +1,7 @@
 R"===(
-/*
+/* Team-Hycon
+  * Copyright 2018      Team-Hycon  <https://github.com/Team-Hycon>
+  *
   * This program is free software: you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
   * the Free Software Foundation, either version 3 of the License, or
@@ -484,15 +486,10 @@ __kernel void cn0(__global ulong *input, __global uint4 *Scratchpad, __global ul
 
         ((ulong8 *)State)[0] = vload8(0, input);
         State[8] = input[8];
-        State[9] = input[9];
-        State[10] = input[10];
+        ((uint *)State)[17] = get_global_id(0);
 
-        ((uint *)State)[9] &= 0x00FFFFFFU;
-        ((uint *)State)[9] |= ((get_global_id(0)) & 0xFF) << 24;
-        ((uint *)State)[10] &= 0xFF000000U;
-        ((uint *)State)[10] |= ((get_global_id(0) >> 8));
-
-        for(int i = 11; i < 25; ++i) State[i] = 0x00UL;
+        for(int i = 9; i < 25; ++i) State[i] = 0x00UL;
+        State[9] = 0x01;
 
         // Last bit of padding
         State[16] = 0x8000000000000000UL;
@@ -566,15 +563,16 @@ __kernel void cn0(__global ulong *input, __global uint4 *Scratchpad, __global ul
 
 #define VARIANT1_2(p) ((uint2 *)&(p))[0] ^= tweak1_2_0
 
-#define VARIANT1_INIT() \
+#define VARIANT1_INIT(p) \
         tweak1_2 = as_uint2(input[4]); \
         tweak1_2.s0 >>= 24; \
         tweak1_2.s0 |= tweak1_2.s1 << 8; \
-        tweak1_2.s1 = get_global_id(0); \
-        tweak1_2 ^= as_uint2(states[24])
+        tweak1_2.s1 = p; \
+        tweak1_2 ^= as_uint2(states[24]);
+
 
 __attribute__((reqd_work_group_size(WORKSIZE, 1, 1)))
-__kernel void cn1_monero(__global uint4 *Scratchpad, __global ulong *states, ulong Threads, uint variant, __global ulong *input)
+__kernel void cn1_monero(__global uint4 *Scratchpad, __global ulong *states, ulong Threads, uint variant, __global ulong *input, uint moneroNonce)
 {
     ulong a[2], b[2];
     __local uint AES0[256], AES1[256], AES2[256], AES3[256];
@@ -614,7 +612,8 @@ __kernel void cn1_monero(__global uint4 *Scratchpad, __global ulong *states, ulo
         b[1] = states[3] ^ states[7];
 
         b_x = ((uint4 *)b)[0];
-        VARIANT1_INIT();
+
+        VARIANT1_INIT(moneroNonce);        
     }
 
     mem_fence(CLK_LOCAL_MEM_FENCE);
@@ -939,6 +938,9 @@ __kernel void Skein(__global ulong *states, __global uint *BranchBuf, __global u
         // The tweak for the output transform is Type = Output with the Final bit set
         // T[0] for the output is 8, and I don't know why - should be message size...
         ulong t[3] = { 0x00UL, 0x7000000000000000UL, 0x00UL };
+        t[0] = 0x00UL;
+        t[1] = 0x7000000000000000UL;
+        t[2] = 0x00UL;
         ulong8 p, m;
 
         for(uint i = 0; i < 4; ++i)
@@ -960,20 +962,22 @@ __kernel void Skein(__global ulong *states, __global uint *BranchBuf, __global u
         t[1] = 0xFF00000000000000UL;
         t[2] = t[0] ^ t[1];
 
-        p = (ulong8)(0);
+        m = (ulong8)(0);
         const ulong h8 = h.s0 ^ h.s1 ^ h.s2 ^ h.s3 ^ h.s4 ^ h.s5 ^ h.s6 ^ h.s7 ^ SKEIN_KS_PARITY;
 
-        p = Skein512Block(p, h, h8, t);
+        p = Skein512Block(m, h, h8, t);
 
         //vstore8(p, 0, output);
 
         // Note that comparison is equivalent to subtraction - we can't just compare 8 32-bit values
         // and expect an accurate result for target > 32-bit without implementing carries
-        if(p.s3 <= Target)
+
+        if(p.s3 < Target)
         {
             ulong outIdx = atomic_inc(output + 0xFF);
-            if(outIdx < 0xFF)
-                output[outIdx] = BranchBuf[idx] + get_global_offset(0);
+            if(outIdx < 0xFF) {
+                output[outIdx] = BranchBuf[idx] + get_global_offset(0);   
+            }
         }
     }
     mem_fence(CLK_GLOBAL_MEM_FENCE);
@@ -1045,7 +1049,8 @@ __kernel void JH(__global ulong *states, __global uint *BranchBuf, __global uint
 
         // Note that comparison is equivalent to subtraction - we can't just compare 8 32-bit values
         // and expect an accurate result for target > 32-bit without implementing carries
-        if(h7l <= Target)
+      
+        if(h7l < Target)
         {
             ulong outIdx = atomic_inc(output + 0xFF);
             if(outIdx < 0xFF)
@@ -1122,9 +1127,7 @@ __kernel void Blake(__global ulong *states, __global uint *BranchBuf, __global u
 
         // Note that comparison is equivalent to subtraction - we can't just compare 8 32-bit values
         // and expect an accurate result for target > 32-bit without implementing carries
-        uint2 t = (uint2)(h[6],h[7]);
-        if( as_ulong(t) <= Target)
-        {
+        if(as_ulong((uint2)(h[6],h[7])) < Target) {
             ulong outIdx = atomic_inc(output + 0xFF);
             if(outIdx < 0xFF)
                 output[outIdx] = BranchBuf[idx] + get_global_offset(0);
@@ -1184,7 +1187,7 @@ __kernel void Groestl(__global ulong *states, __global uint *BranchBuf, __global
 
         // Note that comparison is equivalent to subtraction - we can't just compare 8 32-bit values
         // and expect an accurate result for target > 32-bit without implementing carries
-        if(State[7] <= Target)
+        if(State[7] < Target)
         {
             ulong outIdx = atomic_inc(output + 0xFF);
             if(outIdx < 0xFF)

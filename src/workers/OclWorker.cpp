@@ -7,6 +7,7 @@
  * Copyright 2017-2018 XMR-Stak    <https://github.com/fireice-uk>, <https://github.com/psychocrypt>
  * Copyright 2018      Lee Clagett <https://github.com/vtnerd>
  * Copyright 2016-2018 XMRig       <https://github.com/xmrig>, <support@xmrig.com>
+ * Copyright 2018      Team-Hycon  <https://github.com/Team-Hycon>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -94,7 +95,7 @@ void OclWorker::start()
 
 bool OclWorker::resume(const Job &job)
 {
-    if (m_job.poolId() == -1 && job.poolId() >= 0 && job.id() == m_pausedJob.id()) {
+    if (m_job.poolId() == -1 && job.poolId() >= 0 && job.jobId() == m_pausedJob.jobId()) {
         m_job   = m_pausedJob;
         m_nonce = m_pausedNonce;
         return true;
@@ -148,7 +149,7 @@ void OclWorker::setJob()
 {
     memcpy(m_blob, m_job.blob(), sizeof(m_blob));
 
-    XMRSetJob(m_ctx, m_blob, m_job.size(), m_job.target(), m_job.variant());
+    XMRSetJob(m_ctx, m_blob, m_job.size(), m_job.target(), m_job.variant(), *(m_job.moneroNonce()) );
 }
 
 

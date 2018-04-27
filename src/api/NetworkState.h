@@ -5,6 +5,7 @@
  * Copyright 2014-2016 Wolf9466    <https://github.com/OhGodAPet>
  * Copyright 2016      Jay D Dee   <jayddee246@gmail.com>
  * Copyright 2016-2017 XMRig       <support@xmrig.com>
+ * Copyright 2018      Team-Hycon  <https://github.com/Team-Hycon>
  *
  *
  *   This program is free software: you can redistribute it and/or modify
@@ -46,7 +47,7 @@ public:
 
     char pool[256];
     std::array<uint64_t, 10> topDiff { { } };
-    uint32_t diff;
+    uint64_t diff;
     uint64_t accepted;
     uint64_t failures;
     uint64_t rejected;

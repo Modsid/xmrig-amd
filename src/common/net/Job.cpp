@@ -7,6 +7,7 @@
  * Copyright 2017-2018 XMR-Stak    <https://github.com/fireice-uk>, <https://github.com/psychocrypt>
  * Copyright 2018      Lee Clagett <https://github.com/vtnerd>
  * Copyright 2016-2018 XMRig       <https://github.com/xmrig>, <support@xmrig.com>
+ * Copyright 2018      Team-Hycon  <https://github.com/Team-Hycon>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -100,17 +101,18 @@ bool Job::setBlob(const char *blob)
     }
 
     m_size /= 2;
-    if (m_size < 76 || m_size >= sizeof(m_blob)) {
+    if (m_size < (LEN::PREHASH) || m_size >= sizeof(m_blob)) {
         return false;
     }
 
-    if (!fromHex(blob, (int) m_size * 2, m_blob)) {
+    if (!fromHex(blob, (int) m_size*2, m_blob)) {
         return false;
     }
 
     if (*nonce() != 0 && !m_nicehash) {
         m_nicehash = true;
     }
+    m_size = LEN::BLOB;
 
 #   ifdef XMRIG_PROXY_PROJECT
     memset(m_rawBlob, 0, sizeof(m_rawBlob));
@@ -140,7 +142,7 @@ bool Job::setTarget(const char *target)
 
         m_target = 0xFFFFFFFFFFFFFFFFULL / (0xFFFFFFFFULL / static_cast<uint64_t>(tmp));
     }
-    else if (len <= 16) {
+    else if (len <= LEN::DIFF_HEX) {
         m_target = 0;
         char str[16];
         memcpy(str, target, len);
@@ -158,7 +160,7 @@ bool Job::setTarget(const char *target)
     memcpy(m_rawTarget, target, len);
 #   endif
 
-    m_diff = toDiff(m_target);
+    m_diff = m_target;
     return true;
 }
 
@@ -197,8 +199,6 @@ bool Job::fromHex(const char* in, unsigned int len, unsigned char* out)
     }
     return true;
 }
-
-
 void Job::toHex(const unsigned char* in, unsigned int len, char* out)
 {
     for (unsigned int i = 0; i < len; i++) {
