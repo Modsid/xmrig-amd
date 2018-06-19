@@ -147,12 +147,12 @@ void Network::onResultAccepted(IStrategy *strategy, Client *client, const Submit
     m_state.add(result, error);
 
     if (error) {
-        LOG_INFO(m_options->colors() ? "\x1B[01;31mrejected\x1B[0m (%" PRId64 "/%" PRId64 ") diff \x1B[01;37m%" PRIu64 "\x1B[0m \x1B[31m\"%s\"\x1B[0m \x1B[01;30m(%" PRIu64 " ms)"
+        LOG_INFO(isColors()? "\x1B[01;31mrejected\x1B[0m (%" PRId64 "/%" PRId64 ") diff \x1B[01;37m%" PRIu64 "\x1B[0m \x1B[31m\"%s\"\x1B[0m \x1B[01;30m(%" PRIu64 " ms)"
                                      : "rejected (%" PRId64 "/%" PRId64 ") diff %" PRIu64 " \"%s\" (%" PRIu64 " ms)",
                  m_state.accepted, m_state.rejected, result.diff, error, result.elapsed);
     }
     else {
-        LOG_INFO(m_options->colors() ? "\x1B[01;32maccepted\x1B[0m (%" PRId64 "/%" PRId64 ") diff \x1B[01;37m%" PRIu64 " \x1B[0m \x1B[01;30m(%" PRIu64 " ms)"
+        LOG_INFO(isColors()? "\x1B[01;32maccepted\x1B[0m (%" PRId64 "/%" PRId64 ") diff \x1B[01;37m%" PRIu64 " \x1B[0m \x1B[01;30m(%" PRIu64 " ms)"
                                      : "accepted (%" PRId64 "/%" PRId64 ") diff " PRIu64" (%" PRIu64 " ms)",
                  m_state.accepted, m_state.rejected, result.diff, result.elapsed);
     }
@@ -167,7 +167,7 @@ bool Network::isColors() const
 
 void Network::setJob(Client *client, const Job &job, bool donate)
 {
-    LOG_INFO(isColors() ? MAGENTA_BOLD("new job") " from " WHITE_BOLD("%s:%d") " diff " WHITE_BOLD("%d") " algo " WHITE_BOLD("%s")
+    LOG_INFO(isColors() ? MAGENTA_BOLD("new job") " from " WHITE_BOLD("%s:%d") " diff " WHITE_BOLD("%lu") " algo " WHITE_BOLD("%s")
                         : "new job from %s:%d diff %d algo %s",
              client->host(), client->port(), job.diff(), job.algorithm().shortName());
 

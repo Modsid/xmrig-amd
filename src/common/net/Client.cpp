@@ -282,7 +282,7 @@ bool Client::parseJob(const rapidjson::Value &params, int *code)
     }
     job.setJobId(params[NOTI::JOB_ID].GetUint());
 
-    job.algorithm().parseVariant(xmrig::VARIANT_V1);
+    job.algorithm().parseVariant(xmrig::VARIANT_1);
 
     if (!verifyAlgorithm(job.algorithm())) {
         *code = 6;
@@ -594,16 +594,6 @@ void Client::parseResponse(int64_t id, const rapidjson::Value &result, const rap
     }
 
     if (id == 1) {
-        int code = -1;
-        if (!parseLogin(result, &code)) {
-            if (!isQuiet()) {
-                LOG_ERR("[%s] login error code: %d", m_pool.url(), code);
-            }
-
-            close();
-            return;
-        }
-
         m_failures = 0;
         m_listener->onLoginSuccess(this);
         return;
@@ -875,8 +865,8 @@ void Client::sendAuthorize()
 
     rapidjson::Value params(rapidjson::kArrayType);
 
-    params.PushBack(rapidjson::StringRef(m_url.user()), allocator);
-    params.PushBack(rapidjson::StringRef(m_url.password()), allocator);
+    params.PushBack(rapidjson::StringRef(m_pool.user()), allocator);
+    params.PushBack(rapidjson::StringRef(m_pool.password()), allocator);
 
     doc.AddMember("params", params, allocator);
 
