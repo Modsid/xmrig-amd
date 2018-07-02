@@ -1,5 +1,6 @@
-/build
+/build*
 /CMakeLists.txt.user
 /build2
 /.vscode
 /.cache
+

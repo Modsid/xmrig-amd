@@ -71,8 +71,8 @@ Also you can use configuration via config file, default **config.json**. You can
 * Default donation 5% (5 minutes in 100 minutes) can be reduced to 1% via command line option `--donate-level`.
 
 ## SHA256 for Windows Binary files
-    ad7871564a0417d8b0d608bc34e61d7ab71dffcb61fabff1d3efb79173223826: certUtil -hashfile hycon-amd-win-0.0.1-without-mhttpd/xmrig-amd.exe sha256
-    0dd192e71b6df71a912ab3d614b19de240ebfc7be2c03963d4b268e5599154f3: certUtil -hashfile hycon-amd-win-0.0.1/xmrig-amd.exe sha256
+    36aa4b4fc491354d657669d53ce4661340a7a811aef0f8c0fe508e19e819754c: certUtil -hashfile hycon-amd-win-0.0.2-beta-without-mhttpd/xmrig-amd.exe sha256
+    3639adcd907e253788b86a55f3c80d9b4d5c5298d6e78aae382cc11a2d3cfddd: certUtil -hashfile hycon-amd-win-0.0.2-beta/xmrig-amd.exe sha256
 
 ## Contacts
 * hycon@glosfer.com
