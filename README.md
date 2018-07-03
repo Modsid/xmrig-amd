@@ -1,4 +1,14 @@
-# HYCminer AMD
+# HYCminer-Autorun AMD
+
+New Features:
+Added functionality to start the miner automatically when the Windows start.
+
+To uninstall: 
+1. Open regedit
+2. Delete the key with xmrig.exe path located at Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
+3. Done
+
+
 
 HYCminer is a high performance Hycon (HYC) OpenCL miner, forked from [XMRig](https://github.com/xmrig/xmrig) release v2.6.1.
 
